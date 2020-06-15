@@ -1,0 +1,380 @@
+
+<%@page import="java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" session="true"%>
+<%--別のところになる、クラスをimportしています。 --%>
+<%@ page
+	import="common.CommonInfo,java.util.Date,java.time.LocalDateTime,java.util.Calendar"%>
+
+<!DOCTYPE html>
+<!-- ここから下は、HTML形式です。　コメントの記号も変わります。 -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>日付選択画面</title>
+<!--  <link rel="stylesheet" href="samll_Table.css">-->
+<link rel="stylesheet" href="template.css">
+<link rel="stylesheet" href="c_box_kai.css">
+</head>
+<body>
+
+	<div id="container">
+
+		<header>
+			<h1>スケジュール・テンプレート</h1>
+		</header>
+
+
+
+		<div id="leftbox">
+
+
+			<h3>テンプレート</h3>
+
+			<hr>
+
+			<h3>TO DO</h3>
+
+		</div>
+		<!--  div id="leftbox"-->
+
+		<nav>
+			<div id="c_box">
+
+				<!-- ここから　カレンダーのコードです。 -->
+
+				<%=session.getAttribute("currentYear")%>
+				<%=session.getAttribute("currentMonth")%>
+				<%=(String) session.getAttribute("currentDay")%>
+				<div class="c_1box">
+					<form action="InputServlet" method="post">
+						<table border="1">
+
+							<%
+								ArrayList<String> cMonthDayEList = (ArrayList<String>) session.getAttribute("cMonthDayEList");
+
+							// 日時時間取得
+							Calendar cal = Calendar.getInstance();
+							// 西暦取得
+							int yearNow;
+							// 月 0月からスタート、+1する
+							int monthNow;
+							// 日付
+							int dayNow;
+
+							//送信データー
+							//年currentYear
+							//月currentMonth
+							//日currentDay
+							//nullならばsystemより現在時刻取得
+							if (session.getAttribute("currentYear") == null) {
+								// 西暦取得
+								yearNow = cal.get(Calendar.YEAR);
+								// 月 0月からスタート、+1する
+								monthNow = cal.get(Calendar.MONTH);
+								// 日付
+								dayNow = cal.get(Calendar.DATE);
+							} else {
+								String a = (String) session.getAttribute("currentYear");
+								String b = String.valueOf(session.getAttribute("currentMonth"));
+								String c = (String) session.getAttribute("currentDay");
+								// 西暦取得sessonより
+								yearNow = Integer.parseInt(a);
+								// 月 0月からスタート、+1するsessonより
+								monthNow = Integer.parseInt(b);
+								// 日付sessonより
+								dayNow = Integer.parseInt(c);
+							}
+
+							// 年のセット
+							cal.set(Calendar.MONTH, monthNow);
+							// 月のセット、月+1 にセットする
+							cal.set(Calendar.MONTH, monthNow);
+
+							// 今月の始まり曜日 日曜日から数えて何日目かint
+							cal.set(yearNow, monthNow, 1);
+							int weekFristDay = cal.get(Calendar.DAY_OF_WEEK);
+							cal.clear();
+							// 該当月の末日
+							cal.set(Calendar.MONTH, monthNow);
+							int lastDayOfMonth = cal.getActualMaximum(Calendar.DATE);
+							// 該当前月日数
+							cal.set(Calendar.MONTH, monthNow - 1);
+							int beforeDayOfMonth = cal.getActualMaximum(Calendar.DATE);
+							//				int beforeDayOfMonth=31;
+							%>
+							<tr>
+								<%
+									//月
+								%>
+								<td><input type="submit" id="bIcon" value="m-1"
+									name="arrow" class="button"></td>
+								<td colspan="5" id="nowMonth"><%=yearNow%>年 <%=monthNow + 1%>
+									月</td>
+								<td><input type="submit" id="aIcon" value="m+1"
+									name="arrow" class="button"></td>
+							</tr>
+
+							<tr>
+								<th>/</th>
+								<%
+									//Javaの拡張for文によるtableのセルを繰り返し生成
+								// 曜日表示
+								int i = 0;
+								// 休日表示コントロールid
+								String tagHoliday = "";
+								for (String str : CommonInfo.infoarray) {
+									i++;
+									//祝日な赤色文字
+									if (i == 1) {
+										tagHoliday = "holiday";
+									} else {
+										tagHoliday = "";
+									}
+								%>
+								<th>
+									<div id="<%=tagHoliday%>"><%=str%></div>
+								</th>
+								<%
+									}
+								%>
+							</tr>
+
+							<%
+								//該当月の日付コントロール
+							int dayNum = 0;
+							dayNum -= weekFristDay - 1;
+							//該当月以外ID
+							String sol = "otherMonth";
+
+							//ジャンプ用計算カレンダー
+							Calendar cal2 = Calendar.getInstance();
+							//日付入力 2019, 2, 20
+							cal2.set(2019, 1, 20);
+							// 西暦取得
+							int idY = cal.get(Calendar.YEAR);
+							// 月 0月からスタート、+1する
+							int idM = cal.get(Calendar.MONTH);
+							// 日付
+							int idD = cal.get(Calendar.DATE);
+							//ジャンプ用ID
+							String idYMD = "";
+							//来月フラグ
+							int nextF = dayNum;
+							//イベントフラグ
+							String eventColor = "";
+							String dayNumTo = "";
+
+							//縦6セル固定
+							for (int j = 1; j <= 6; j++) {
+							%>
+							<tr>
+								<%
+									//横に7つのセル固定
+								for (int k = 1; k <= 7; k++) {
+
+									String week_button = "<td>○</td>";
+									if (k == 1) {
+										out.print(week_button);
+									}
+
+									eventColor = "normal";
+									//ジャンプ用日付ID計算
+									int year = cal2.get(Calendar.YEAR);
+									int month = cal2.get(Calendar.MONTH) + 1;
+									int day = cal2.get(Calendar.DATE);
+									StringBuffer idYYMMdd = new StringBuffer();
+									idYYMMdd.append(year + "-" + month + "-" + day);
+
+									dayNum++;
+									nextF++;
+									//1日になったら、1からカウント
+									if (dayNum == 1) {
+										beforeDayOfMonth = 0;
+										sol = "nowMonth";
+									}
+									//祝日ならさらに上書きで赤色文字
+									if (k == 1) {
+										tagHoliday = "holiday";
+									} else {
+										tagHoliday = "";
+									}
+
+									//来月になったら、また1からカウント
+									if (dayNum > lastDayOfMonth) {
+										dayNum = 1;
+										sol = "otherMonth";
+										nextF = 51;
+									}
+									idYMD = "value=\"" + String.valueOf(nextF) + "\"";
+
+									if (dayNum < 10) {
+										dayNumTo = "0" + dayNum;
+									} else {
+										dayNumTo = "" + dayNum;
+									}
+									String chkDay = (String) session.getAttribute("currentYear") + "-"
+									+ (String) session.getAttribute("selectMonth") + "-" + dayNumTo;
+									for (String str : cMonthDayEList) {
+										if (chkDay.equals(str)) {
+									eventColor = "eventColor";
+										} else {
+									//eventColor = "normal";
+										}
+									}
+								%>
+								<td id="<%=sol%>">
+									<div class="<%=eventColor%>">
+										<div class="<%=tagHoliday%>">
+											<!--  	<%=dayNum + beforeDayOfMonth%> -->
+											<input type="submit" name="arrow" <%=idYMD%> class="button">
+										</div>
+									</div>
+								</td>
+								<%
+									}
+								%>
+							</tr>
+							<%
+								}
+							%>
+
+							<tr>
+								<td class="text_button" align="center" colspan="8"><input
+									type="hidden" name="page_flag" value="11" /> <input
+									type="submit" name="arrow" value="一覧をみる"></td>
+							</tr>
+						</table>
+					</form>
+				</div>
+				<!--  div class="c_1box"-->
+
+				<!-- カレンダー。風間さんベースのコードはここまで。 -->
+
+
+				<hr>
+
+				<h4>1月実行表</h4>
+
+				<table>
+					<!-- 後で風間さんのコンテンツに差し替え予定？ -->
+					<tr>
+						<th>/</th>
+						<th>日</th>
+						<th>月</th>
+						<th>火</th>
+						<th>水</th>
+						<th>木</th>
+						<th>金</th>
+						<th>土</th>
+					</tr>
+					<tr>
+						<th>○</th>
+						<th>1</th>
+						<th>2</th>
+						<th>3</th>
+						<th>4</th>
+						<th>5</th>
+						<th>6</th>
+						<th>7</th>
+					</tr>
+					<tr>
+						<th>○</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th>○</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th>○</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+					<tr>
+						<th>○</th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</table>
+
+				<hr>
+
+
+
+
+
+			</div>
+			<!--  <div id="c_box"> -->
+
+
+			<div id="linkarea">
+
+				<p>
+					<input type="button" value="トップ画面">
+				</p>
+				<p>
+					<input type="button" value="年（全体）画面">
+				</p>
+
+				<p>
+					<input type="button" value="予定入力画面１">
+				</p>
+				<p>
+					<input type="button" value="予定入力画面２">
+				</p>
+				<p>
+					<input type="button" value="定型チェック設定画面">
+				</p>
+				<!--
+<p><input type="button" value="定型チェック変更画面　定性"></p>
+<p> <input type="button" value="定型チェック変更画面　定量"> </p>
+-->
+				<p>
+					<input type="button" value="設定変更画面">
+				</p>
+
+			</div>
+			<!-- <div id="linkarea" > -->
+
+		</nav>
+
+		<footer>
+			<small>チームJava3pm_20180905.Copyright_Allreserved<br>制作者
+			</small>
+		</footer>
+
+
+	</div>
+	<!--  div id="container">-->
+
+
+</body>
+</html>
+
+
+
+
