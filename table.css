@@ -1,0 +1,117 @@
+@CHARSET "UTF-8";
+
+table, th, td {
+	border: 1px #222222 solid;
+	border-color: #c0c0c0;
+}
+
+table th {
+	border-color: #c0c0c0;
+	border-right-color: #004080;
+	border-bottom: #000000;
+	border-bottom-right-radius: 15px;
+	background-color: #EEEEEE;
+	width: 80px;
+	height: 80px;
+}
+
+table td {
+	width: 80px;
+	height: 80px;
+	text-align: left;
+	font-size: 18px;
+}
+.normal{
+	/*イベントなし*/
+	background-color: ;
+}
+
+.eventColor{
+	/*イベントあり*/
+	background-color: #dcddfe;
+}
+
+.head {
+	height: 28px;
+	font-size: 20px;
+}
+
+#otherMonth {
+	color: #c0c0c0;
+}
+
+#nowMonth {
+	font-size: 28px;
+	color: #505050;
+}
+
+#holiday {
+	color: #ff8080;
+}
+
+.button {
+	display: inline-block;
+	border-radius: 5%; /* 角丸       */
+	font-size: 16pt; /* 文字サイズ */
+	text-align: center; /* 文字位置   */
+	cursor: pointer; /* カーソル   */
+	padding: 12px 10px; /* 余白       */
+	background: rgba(255, 255, 255, 0.16); /* 背景色     */
+	color: #ffffff; /* 文字色     */
+	line-height: 1em; /* 1行の高さ  */
+	transition: .3s; /* なめらか変化 */
+	box-shadow: 6px 6px 8px #666666; /* 影の設定 */
+	border: 2px solid rgba(255, 255, 255, 0.16); /* 枠の指定 */
+}
+
+.button:hover {
+	box-shadow: none; /* カーソル時の影消去 */
+	color: rgba(255, 255, 255, 0.16); /* 背景色     */
+	background: #808080; /* 文字色     */
+}
+
+
+
+#bIcon {
+	margin: auto;
+	box-shadow: 0px 0px 0px #666666; /* 影の設定 */
+	padding: 0px 0px; /* 余白       */
+	display: block;
+	content: "";
+	position: relative;
+	top:;
+	left: 0px;
+	width: 0;
+	height: 0;
+	margin-left: 10%;
+	border: 20px solid transparent; /*top right bottom を透明化 */
+	border-right: 20px solid #c0c0c0;
+	transition: .3s; /* なめらか変化 */
+}
+
+#bIcon:hover {
+	left: -5px; /*マウスオーバーで三角をずらす */
+	background-color: rgba(255, 255, 255, 0.16);
+}
+
+#aIcon {
+	margin: auto;
+	box-shadow: 0px 0px 0px #666666; /* 影の設定 */
+	padding: 0px 0px; /* 余白       */
+	display: block;
+	content: "";
+	position: relative;
+	top:;
+	left: 0px;
+	width: 0;
+	height: 0;
+	margin-right: 10%;
+	border: 20px solid transparent; /*top right bottom を透明化 */
+	border-left: 20px solid #c0c0c0;
+	transition: .3s; /* なめらか変化 */
+}
+
+#aIcon:hover {
+	left: 5px; /*マウスオーバーで三角をずらす */
+	background-color: rgba(255, 255, 255, 0.16);
+}
